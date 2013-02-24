@@ -2,7 +2,7 @@
 	ForecastShelf getshelfdata.php
 		- Shelf returns data for current weather and next 3 days forecast using WeatherUnderground API
 		- Data: "AAABBBCCCDDD"
-		- AAA is 3 digits [Condition][WIND][GUST]
+		- AAA is 3 digits [Condition][WIND][TEMP]
 		
 		© Copyright Blake Sawyer 2012
 
@@ -30,12 +30,13 @@
 			20-29 = 3;
 			30+ = 4;
 
-		GUSTS (3rd number):
+		TEMP (3rd number):
 			NA = 0;
-			0-9 = 1;
-			10-19 = 2;
-			20-29 = 3;
-			30+ = 4;
+			<30 = 1;
+			30-49 = 2;
+			50-69 = 3;
+			70+ = 4;
+
 
 	  	*/
 	
@@ -62,22 +63,22 @@
 	  	
 	  	$today_icon = $parsed_json->{"forecast"}->{"simpleforecast"}->{"forecastday"}[0]->{"icon"};
 	  	$today_average_wind = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[0]->{'avewind'}->{'mph'};
-	  	$today_gust = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[0]->{'maxwind'}->{'mph'};
+	  	$today_temp = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[0]->{'high'}->{'fahrenheit'};
 	  	$today_pop = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[0]->{'pop'};
 
 	  	$one_icon = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[1]->{'icon'};
 	  	$one_average_wind = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[1]->{'avewind'}->{'mph'};
-	  	$one_gust = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[1]->{'maxwind'}->{'mph'};
+	  	$one_temp = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[1]->{'high'}->{'fahrenheit'};
 	  	$one_pop = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[1]->{'pop'};
 
 	  	$two_icon = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[2]->{'icon'};
 	  	$two_average_wind = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[2]->{'avewind'}->{'mph'};
-	  	$two_gust = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[2]->{'maxwind'}->{'mph'};
+	  	$two_temp = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[2]->{'high'}->{'fahrenheit'};
 	  	$two_pop = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[2]->{'pop'};
 
 	  	$three_icon = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[3]->{'icon'};
 	  	$three_average_wind = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[3]->{'avewind'}->{'mph'};
-	  	$three_gust = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[3]->{'maxwind'}->{'mph'};
+	  	$three_temp = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[3]->{'high'}->{'fahrenheit'};
 	  	$three_pop = $parsed_json->{'forecast'}->{'simpleforecast'}->{'forecastday'}[3]->{'pop'};
 	
 
@@ -199,19 +200,19 @@
 
 		}
 
-		if(intval($today_gust) <= 9){
+		if(intval($today_temp) <= 29){
 			$today_conditions .= "1";
 
 		}
-		elseif(intval($today_gust) <= 19){
+		elseif(intval($today_temp) <= 49){
 			$today_conditions .= "2";
 
 		}
-		elseif(intval($today_gust) <= 29){
+		elseif(intval($today_temp) <= 69){
 			$today_conditions .= "3";
 
 		}
-		elseif(intval($today_gust) >= 30){
+		elseif(intval($today_temp) >= 70){
 			$today_conditions .= "4";
 
 		}
@@ -219,11 +220,6 @@
 			$today_conditions .= "0";
 
 		}
-
-
-
-
-
 
 		//NEXT DAY
 		if(in_array($one_icon,$tstorm_strs)){
@@ -317,20 +313,25 @@
 			$one_conditions .= "0";
 		}
 
-		if(intval($one_gust) <= 9){
+		if(intval($one_temp) <= 29){
 			$one_conditions .= "1";
+
 		}
-		elseif(intval($one_gust) <= 19){
+		elseif(intval($one_temp) <= 49){
 			$one_conditions .= "2";
+
 		}
-		elseif(intval($one_gust) <= 29){
+		elseif(intval($one_temp) <= 69){
 			$one_conditions .= "3";
+
 		}
-		elseif(intval($one_gust) >= 30){
+		elseif(intval($one_temp) >= 70){
 			$one_conditions .= "4";
+
 		}
 		else{
 			$one_conditions .= "0";
+
 		}
 
 
@@ -430,20 +431,25 @@
 			$two_conditions .= "0";
 		}
 
-		if(intval($two_gust) <= 9){
+		if(intval($two_temp) <= 29){
 			$two_conditions .= "1";
+
 		}
-		elseif(intval($two_gust) <= 19){
+		elseif(intval($two_temp) <= 49){
 			$two_conditions .= "2";
+
 		}
-		elseif(intval($two_gust) <= 29){
+		elseif(intval($two_temp) <= 69){
 			$two_conditions .= "3";
+
 		}
-		elseif(intval($two_gust) >= 30){
+		elseif(intval($two_temp) >= 70){
 			$two_conditions .= "4";
+
 		}
 		else{
 			$two_conditions .= "0";
+
 		}
 
 
@@ -541,20 +547,25 @@
 			$three_conditions .= "0";
 		}
 
-		if(intval($three_gust) <= 9){
+		if(intval($three_temp) <= 29){
 			$three_conditions .= "1";
+
 		}
-		elseif(intval($three_gust) <= 19){
+		elseif(intval($three_temp) <= 49){
 			$three_conditions .= "2";
+
 		}
-		elseif(intval($three_gust) <= 29){
+		elseif(intval($three_temp) <= 69){
 			$three_conditions .= "3";
+
 		}
-		elseif(intval($three_gust) >= 30){
+		elseif(intval($three_temp) >= 70){
 			$three_conditions .= "4";
+
 		}
 		else{
 			$three_conditions .= "0";
+
 		}
 		
 		echo $today_conditions;
